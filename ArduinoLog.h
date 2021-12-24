@@ -375,6 +375,7 @@ private:
 			}
 			xSemaphoreGive(_semaphore);
 		}
+        va_end(args);
 #endif
 	}
 
