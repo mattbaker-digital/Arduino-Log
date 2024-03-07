@@ -31,11 +31,12 @@ SOFTWARE.
 
 #include "ArduinoLog.h"
 
-void Logging::begin(int level, Print* logOutput, bool showLevel)
+void Logging::begin(int level, Print* logOutput, bool showLevel, bool showColors)
 {
 #ifndef DISABLE_LOGGING
 	setLevel(level);
 	setShowLevel(showLevel);
+	setShowColors(showColors);
 	_logOutput = logOutput;
 	_semaphore = xSemaphoreCreateMutex();
 	xSemaphoreGive(_semaphore);
@@ -69,6 +70,22 @@ bool Logging::getShowLevel() const
 {
 #ifndef DISABLE_LOGGING
 	return _showLevel;
+#else
+	return false;
+#endif
+}
+
+void Logging::setShowColors(bool showColors)
+{
+#ifndef DISABLE_LOGGING
+	_showColors = showColors;
+#endif
+}
+
+bool Logging::getShowColors() const
+{
+#ifndef DISABLE_LOGGING
+	return _showColors;
 #else
 	return false;
 #endif
