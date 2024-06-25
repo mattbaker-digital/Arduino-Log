@@ -11,16 +11,17 @@
 Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 
 */
-#pragma once
+#ifndef _ARDUINO_LOG_H_
+#define _ARDUINO_LOG_H_
 #include <inttypes.h>
 #include <stdarg.h>
 #include <mutex>
 
 // Non standard: Arduino.h also chosen if ARDUINO is not defined. To facilitate use in non-Arduino test environments
 #if ARDUINO < 100
-	#include "WProgram.h"
+#include "WProgram.h"
 #else
-	#include "Arduino.h"
+#include "Arduino.h"
 #endif
 
 // PGM stubs to facilitate use in non-Arduino test environments
@@ -47,14 +48,14 @@ typedef void (*printfunction)(Print*, int);
 #define LOG_LEVEL_TRACE   5
 #define LOG_LEVEL_VERBOSE 6
 
-#define BOLDRED F("\033[1;31m")
-#define BOLDWHITE F("\033[1;37m")
-#define RED "\033[;31m"
-#define YELLOW "\033[;33m"
-#define GREEN "\033[;32m"
-#define WHITE "\033[;37m"
-#define BLACK "\033[;38;5;240m"
-#define ENDCOLOUR "\033[0m"
+#define LOG_COLOR_BOLDRED F("\033[1;31m")
+#define LOG_COLOR_BOLDWHITE F("\033[1;37m")
+#define LOG_COLOR_RED "\033[;31m"
+#define LOG_COLOR_YELLOW "\033[;33m"
+#define LOG_COLOR_GREEN "\033[;32m"
+#define LOG_COLOR_WHITE "\033[;37m"
+#define LOG_COLOR_BLACK "\033[;38;5;240m"
+#define LOG_COLOR_END "\033[0m"
 #define CR "\n"
 #define LF "\r"
 #define NL "\n\r"
@@ -97,8 +98,7 @@ typedef void (*printfunction)(Print*, int);
  * 6 - LOG_LEVEL_VERBOSE    all
  */
 
-class Logging
-{
+class Logging {
 public:
 	/**
 	 * default Constructor
@@ -217,17 +217,17 @@ public:
 	 * \param ... any number of variables
 	 * \return void
 	 */
-  template <class T, typename... Args> void fatal(T msg, Args... args){
+	template <class T, typename... Args> void fatal(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_FATAL, false, msg, args...);
 #endif
-  }
+	}
 
-  template <class T, typename... Args> void fatalln(T msg, Args... args){
+	template <class T, typename... Args> void fatalln(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_FATAL, true, msg, args...);
 #endif
-  }
+	}
 
 	/**
 	 * Output an error message. Output message contains
@@ -239,17 +239,18 @@ public:
 	 * \param ... any number of variables
 	 * \return void
 	 */
-  template <class T, typename... Args> void error(T msg, Args... args){
+	template <class T, typename... Args> void error(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_ERROR, false, msg, args...);
 #endif
-  }
+	}
   
-   template <class T, typename... Args> void errorln(T msg, Args... args){
+	template <class T, typename... Args> void errorln(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_ERROR, true, msg, args...);
 #endif
-  } 
+	}
+
 	/**
 	 * Output a warning message. Output message contains
 	 * W: followed by original message
@@ -260,17 +261,17 @@ public:
 	 * \param ... any number of variables
 	 * \return void
 	 */
-  template <class T, typename... Args> void warning(T msg, Args...args){
+	template <class T, typename... Args> void warning(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_WARNING, false, msg, args...);
+	printLevel(LOG_LEVEL_WARNING, false, msg, args...);
 #endif
-  }
+	}
   
-   template <class T, typename... Args> void warningln(T msg, Args...args){
+	template <class T, typename... Args> void warningln(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_WARNING, true, msg, args...);
 #endif
-  } 
+	}
 
 	/**
 	 * Output a notice message. Output message contains
@@ -282,29 +283,29 @@ public:
 	 * \param ... any number of variables
 	 * \return void
 	 */
-  template <class T, typename... Args> void notice(T msg, Args...args){
+	template <class T, typename... Args> void notice(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_NOTICE, false, msg, args...);
 #endif
-  }
+	}
   
-  template <class T, typename... Args> void noticeln(T msg, Args...args){
+	template <class T, typename... Args> void noticeln(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_NOTICE, true, msg, args...);
 #endif
-  }  
+	}
 
-  template <class T, typename... Args> void info(T msg, Args...args) {
+	template <class T, typename... Args> void info(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_INFO, false, msg, args...);
 #endif
-  }
+	}
 
-  template <class T, typename... Args> void infoln(T msg, Args...args) {
+	template <class T, typename... Args> void infoln(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_INFO, true, msg, args...);
 #endif
-  }
+	}
 
 	/**
 	 * Output a trace message. Output message contains
@@ -316,15 +317,15 @@ public:
 	 * \param ... any number of variables
 	 * \return void
 	*/
-  template <class T, typename... Args> void trace(T msg, Args... args){
+	template <class T, typename... Args> void trace(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
-    printLevel(LOG_LEVEL_TRACE, false, msg, args...);
+		printLevel(LOG_LEVEL_TRACE, false, msg, args...);
 #endif
-  }
+	}
 
-  template <class T, typename... Args> void traceln(T msg, Args... args){
+	template <class T, typename... Args> void traceln(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
-    printLevel(LOG_LEVEL_TRACE, true, msg, args...);
+		printLevel(LOG_LEVEL_TRACE, true, msg, args...);
 #endif
 	}
 
@@ -338,25 +339,24 @@ public:
 	 * \param ... any number of variables
 	 * \return void
 	 */
-  template <class T, typename... Args> void verbose(T msg, Args... args){
+	template <class T, typename... Args> void verbose(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_VERBOSE, false, msg, args...);
 #endif
-  }
+	}
 
-  template <class T, typename... Args> void verboseln(T msg, Args... args){
+	template <class T, typename... Args> void verboseln(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
 		printLevel(LOG_LEVEL_VERBOSE, true, msg, args...);
 #endif
-  }
+	}
 
 private:
 	void print(const char *format, va_list args);
 
 	void print(const __FlashStringHelper *format, va_list args);
 
-	void print(const Printable& obj, va_list args)
-	{
+	void print(const Printable& obj, va_list args) {
 #ifndef DISABLE_LOGGING
 		_logOutput->print(obj);
 #endif
@@ -364,51 +364,37 @@ private:
 
 	void printFormat(const char format, va_list *args);
 
-	template <class T> void printLevel(int level, bool cr, T msg, ...)
-	{
+	template <class T> void printLevel(int level, bool cr, T msg, ...) {
 #ifndef DISABLE_LOGGING
-		if (level > _level)
-		{
+		if (level > _level) {
 			return;
 		}
-		if (level < LOG_LEVEL_SILENT) 
-		{
+		if (level < LOG_LEVEL_SILENT) {
 			level = LOG_LEVEL_SILENT;
 		}
 
-		if(xSemaphoreTake(_semaphore, (TickType_t) 10 )) {
-
-		if (_showColors)
-		{
-			switch (level)
-			{
-			case LOG_LEVEL_FATAL:
-				_logOutput->print(BOLDRED);
-				break;
-			case LOG_LEVEL_ERROR:
-				_logOutput->print(RED);
-				break;
-			case LOG_LEVEL_WARNING:
-				_logOutput->print(YELLOW);
-				break;
-			case LOG_LEVEL_NOTICE:
-				_logOutput->print(GREEN);
-				break;
-			case LOG_LEVEL_VERBOSE:
-				_logOutput->print(BLACK);
-				break;
-			default:
-				break;
+		if (xSemaphoreTake(_semaphore, (TickType_t) 10 )) {
+			if (_showColors) {
+				switch (level) {
+				case LOG_LEVEL_FATAL:
+					_logOutput->print(LOG_COLOR_BOLDRED);
+					break;
+				case LOG_LEVEL_ERROR:
+					_logOutput->print(LOG_COLOR_RED);
+					break;
+				case LOG_LEVEL_WARNING:
+					_logOutput->print(LOG_COLOR_YELLOW);
+					break;
+				default:
+					break;
+				}
 			}
-		}
 
-			if (_prefix != NULL)
-			{
+			if (_prefix != NULL) {
 				_prefix(_logOutput, level);
 			}
 
-			if (_showLevel)
-            {
+			if (_showLevel) {
 				static const char levels[] = "FEWITV";
 				_logOutput->print(levels[level - 1]);
 				_logOutput->print(": ");
@@ -418,25 +404,21 @@ private:
 			va_start(args, msg);
 			print(msg, args);
 
-		va_list args;
-		va_start(args, msg);
-		print(msg, args);
-
-			if(_suffix != NULL)
-			{
+			if(_suffix != NULL)	{
 				_suffix(_logOutput, level);
 			}
-			if (cr)
-			{
+
+			if (cr)	{
 			    _logOutput->print(CR);
 			}
+
+			if (_showColors) {
+				_logOutput->print(LOG_COLOR_END);
+			}
+
+			va_end(args);
 			xSemaphoreGive(_semaphore);
 		}
-		if (_showColors)
-		{
-			_logOutput->print(ENDCOLOUR);
-		}
-        va_end(args);
 #endif
 	}
 
@@ -453,3 +435,4 @@ private:
 };
 
 extern Logging Log;
+#endif

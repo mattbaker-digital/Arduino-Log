@@ -31,8 +31,7 @@ SOFTWARE.
 
 #include "ArduinoLog.h"
 
-void Logging::begin(int level, Print* logOutput, bool showLevel, bool showColors)
-{
+void Logging::begin(int level, Print* logOutput, bool showLevel, bool showColors) {
 #ifndef DISABLE_LOGGING
 	setLevel(level);
 	setShowLevel(showLevel);
@@ -43,15 +42,13 @@ void Logging::begin(int level, Print* logOutput, bool showLevel, bool showColors
 #endif
 }
 
-void Logging::setLevel(int level)
-{
+void Logging::setLevel(int level) {
 #ifndef DISABLE_LOGGING
 	_level = constrain(level, LOG_LEVEL_SILENT, LOG_LEVEL_VERBOSE);
 #endif
 }
 
-int Logging::getLevel() const
-{
+int Logging::getLevel() const {
 #ifndef DISABLE_LOGGING
 	return _level;
 #else
@@ -59,15 +56,13 @@ int Logging::getLevel() const
 #endif
 }
 
-void Logging::setShowLevel(bool showLevel)
-{
+void Logging::setShowLevel(bool showLevel) {
 #ifndef DISABLE_LOGGING
 	_showLevel = showLevel;
 #endif
 }
 
-bool Logging::getShowLevel() const
-{
+bool Logging::getShowLevel() const {
 #ifndef DISABLE_LOGGING
 	return _showLevel;
 #else
@@ -75,15 +70,13 @@ bool Logging::getShowLevel() const
 #endif
 }
 
-void Logging::setShowColors(bool showColors)
-{
+void Logging::setShowColors(bool showColors) {
 #ifndef DISABLE_LOGGING
 	_showColors = showColors;
 #endif
 }
 
-bool Logging::getShowColors() const
-{
+bool Logging::getShowColors() const {
 #ifndef DISABLE_LOGGING
 	return _showColors;
 #else
@@ -91,36 +84,31 @@ bool Logging::getShowColors() const
 #endif
 }
 
-void Logging::setPrefix(printfunction f)
-{
+void Logging::setPrefix(printfunction f) {
 #ifndef DISABLE_LOGGING
 	_prefix = f;
 #endif
 }
 
-void Logging::clearPrefix()
-{
+void Logging::clearPrefix() {
 #ifndef DISABLE_LOGGING
 	_prefix = nullptr;
 #endif
 }
 
-void Logging::setSuffix(printfunction f)
-{
+void Logging::setSuffix(printfunction f) {
 #ifndef DISABLE_LOGGING
 	_suffix = f;
 #endif
 }
 
-void Logging::clearSuffix()
-{
+void Logging::clearSuffix() {
 #ifndef DISABLE_LOGGING
 	_suffix = nullptr;
 #endif
 }
 
-void Logging::print(const __FlashStringHelper *format, va_list args)
-{
+void Logging::print(const __FlashStringHelper *format, va_list args) {
 #ifndef DISABLE_LOGGING	  	
 	PGM_P p = reinterpret_cast<PGM_P>(format);
 // This copy is only necessary on some architectures (x86) to change a passed
@@ -130,10 +118,8 @@ void Logging::print(const __FlashStringHelper *format, va_list args)
 	va_copy(args_copy, args);
 #endif
 	char c = pgm_read_byte(p++);
-	for(;c != 0; c = pgm_read_byte(p++))
-	{
-		if (c == '%')
-		{
+	for(;c != 0; c = pgm_read_byte(p++)) {
+		if (c == '%') {
 			c = pgm_read_byte(p++);
 #ifdef __x86_64__
 			printFormat(c, &args_copy);
@@ -141,8 +127,7 @@ void Logging::print(const __FlashStringHelper *format, va_list args)
 			printFormat(c, &args);
 #endif
 		}
-		else
-		{
+		else {
 			_logOutput->print(c);
 		}
 	}
@@ -160,10 +145,8 @@ void Logging::print(const char *format, va_list args) {
 	va_list args_copy;
 	va_copy(args_copy, args);
 #endif
-	for (; *format != 0; ++format)
-	{
-		if (*format == '%')
-		{
+	for (; *format != 0; ++format) {
+		if (*format == '%') {
 			++format;
 #ifdef __x86_64__
 			printFormat(*format, &args_copy);
@@ -171,8 +154,7 @@ void Logging::print(const char *format, va_list args) {
 			printFormat(*format, &args);
 #endif
 		}
-		else
-		{
+		else {
 			_logOutput->print(*format);
 		}
 	}
@@ -185,34 +167,27 @@ void Logging::print(const char *format, va_list args) {
 void Logging::printFormat(const char format, va_list *args) {
 #ifndef DISABLE_LOGGING
 	if (format == '\0') return;
-	if (format == '%')
-	{
+	if (format == '%') {
 		_logOutput->print(format);
 	}
-	else if (format == 's')
-	{
+	else if (format == 's') {
 		char *s = va_arg(*args, char *);
 		_logOutput->print(s);
 	}
-	else if (format == 'S')
-	{
+	else if (format == 'S')	{
 		__FlashStringHelper *s = va_arg(*args, __FlashStringHelper *);
 		_logOutput->print(s);
 	}
-	else if (format == 'd' || format == 'i')
-	{
+	else if (format == 'd' || format == 'i') {
 		_logOutput->print(va_arg(*args, int), DEC);
 	}
-	else if (format == 'D' || format == 'F')
-	{
+	else if (format == 'D' || format == 'F') {
 		_logOutput->print(va_arg(*args, double));
 	}
-	else if (format == 'x')
-	{
+	else if (format == 'x') {
 		_logOutput->print(va_arg(*args, int), HEX);
 	}
-	else if (format == 'X')
-	{		
+	else if (format == 'X') {
 		_logOutput->print("0x");
 		//_logOutput->print(va_arg(*args, int), HEX);
 	    uint16_t h = (uint16_t) va_arg( *args, int );
@@ -221,30 +196,24 @@ void Logging::printFormat(const char format, va_list *args) {
         if (h<0xF  ) _logOutput->print('0');
         _logOutput->print(h,HEX);
 	}
-	else if (format == 'p')
-	{		
+	else if (format == 'p') {
 		Printable *obj = (Printable *) va_arg(*args, int);
 		_logOutput->print(*obj);
 	}
-	else if (format == 'b')
-	{
+	else if (format == 'b') {
 		_logOutput->print(va_arg(*args, int), BIN);
 	}
-	else if (format == 'B')
-	{
+	else if (format == 'B') {
 		_logOutput->print("0b");
 		_logOutput->print(va_arg(*args, int), BIN);
 	}
-	else if (format == 'l')
-	{
+	else if (format == 'l') {
 		_logOutput->print(va_arg(*args, long), DEC);
 	}
-	else if (format == 'u')
-	{
+	else if (format == 'u') {
 		_logOutput->print(va_arg(*args, unsigned long), DEC);
 	}
-	else if (format == 'c')
-	{
+	else if (format == 'c') {
 		_logOutput->print((char) va_arg(*args, int));
 	}
 	else if( format == 'C' ) {
@@ -257,25 +226,18 @@ void Logging::printFormat(const char format, va_list *args) {
 			_logOutput->print(c, HEX);
 		}
     }
-	else if(format == 't')
-	{
-		if (va_arg(*args, int) == 1)
-		{
+	else if(format == 't') {
+		if (va_arg(*args, int) == 1) {
 			_logOutput->print("T");
 		}
-		else
-		{
+		else {
 			_logOutput->print("F");
 		}
 	}
-	else if (format == 'T')
-	{
-		if (va_arg(*args, int) == 1)
-		{
+	else if (format == 'T') {
+		if (va_arg(*args, int) == 1) {
 			_logOutput->print(F("true"));
-		}
-		else
-		{
+		} else {
 			_logOutput->print(F("false"));
 		}
 	}
@@ -285,4 +247,3 @@ void Logging::printFormat(const char format, va_list *args) {
 #ifndef __DO_NOT_INSTANTIATE__
 Logging Log = Logging();
 #endif
-
