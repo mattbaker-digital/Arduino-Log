@@ -18,6 +18,8 @@ ArduinoLog is a minimalistic framework to help the programmer output log stateme
 * Supports multiple variables
 * Supports formatted strings 
 * Supports formatted strings from flash memory
+* Supports ANSI colors in logs
+* Supports multiple output streams
 * Fixed memory allocation (zero malloc)
 * MIT License
 
@@ -26,6 +28,8 @@ ArduinoLog is a minimalistic framework to help the programmer output log stateme
 * All Arduino boards (Uno, Due, Mini, Micro, Yun...)
 * ESP8266
 * ESP32
+
+> Note: Automated tests revealed compatibility issues on some boards. See [#1](Arduino-Log/issues/1). Until properly resolved, we are verifying the functionality only for ESP32 boards.
 
 ## Downloading
 
@@ -193,6 +197,40 @@ will result in log timestamps very similar to e.g. NLOG:
 ```
 00:47:51.432 VERBOSE Message to be logged
 ```
+
+### ANSI colors support
+
+You can optionally enable ANSI color mode.
+
+```c++
+    Serial.begin(9600);
+    
+    // Initialize with color support
+    Log.begin (LOG_LEVEL_VERBOSE, &Serial, true, /*showColors*/ true);
+```
+
+Optionally, you can set the color mode later using `setShowColors(bool showColors)` and get the current state using `getShowColors()`.
+
+### Multiple output streams support
+
+By default, Arduino-Log outputs to a single `Printable` output, usually `Serial`. However, you can add more handlers and output to other sources,
+e.g. into a log file. By default, up to 5 handlers is supported. You can override this setting by re-defining the `LOG_MAX_HANDLERS` constant.
+
+```c++
+    Serial.begin(9600);
+    
+    // Initialize with output to Serial
+    Log.begin (LOG_LEVEL_VERBOSE, &Serial);
+
+    // Get another Printable object, for example a file from SD card.
+    File sdcardLog = ... // Properly initialize the object.
+
+    Log.addHandler(sdcardLog);
+
+    // Once the extra stream is not needed, you can simply remove the handler:
+    Log.removeHandler(sdcardLog);
+```
+
 
 ## Credit
 

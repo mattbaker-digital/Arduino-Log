@@ -36,6 +36,10 @@
 #endif
 typedef void (*printfunction)(Print*, int);
 
+// This allows Arduino-Log to output the stream to multiple outputs.
+// If you need more than 5 outputs at a time, re-define this constant.
+#define LOG_MAX_HANDLERS 5
+
 
 // *************************************************************************
 //  Uncomment line below to fully disable logging, and reduce project size
@@ -103,343 +107,357 @@ typedef void (*printfunction)(Print*, int);
 
 class Logging {
 public:
-	/**
-	 * default Constructor
-	 */
-	Logging()
-#ifndef DISABLE_LOGGING
-		: _level(LOG_LEVEL_SILENT),
-		  _showLevel(true),
-		  _showColors(false),
-		  _logOutput(NULL)
-#endif
-	{
+    explicit Logging();
 
-	}
+    /**
+     * Initializing, must be called as first. Note that if you use
+     * this variant of Init, you need to initialize the baud rate
+     * yourself, if printer happens to be a serial port.
+     * 
+     * \param level - logging levels <= this will be logged.
+     * \param printer - place that logging output will be sent to.
+     * \param showLevel - if true, the level will be shown in the output.
+     * \param showColors - if true, the color will be shown in the output.
+     * \return void
+     *
+     */
+    void begin(int level, Print *output, bool showLevel = true, bool showColors = false);
 
-	/**
-	 * Initializing, must be called as first. Note that if you use
-	 * this variant of Init, you need to initialize the baud rate
-	 * yourself, if printer happens to be a serial port.
-	 * 
-	 * \param level - logging levels <= this will be logged.
-	 * \param printer - place that logging output will be sent to.
-	 * \param showLevel - if true, the level will be shown in the output.
-	 * \param showColors - if true, the color will be shown in the output.
-	 * \return void
-	 *
-	 */
-	void begin(int level, Print *output, bool showLevel = true, bool showColors = false);
+    /**
+     * Set the log level.
+     * 
+     * \param level - The new log level.
+     * \return void
+     */
+    void setLevel(int level);
 
-	/**
-	 * Set the log level.
-	 * 
-	 * \param level - The new log level.
-	 * \return void
-	 */
-	void setLevel(int level);
+    /**
+     * Get the log level.
+     *
+     * \return The current log level.
+     */
+    int getLevel() const;
 
-	/**
-	 * Get the log level.
-	 *
-	 * \return The current log level.
-	 */
-	int getLevel() const;
+    /**
+     * Set whether to show the log level.
+     * 
+     * \param showLevel - true if the log level should be shown for each log
+     *                    false otherwise.
+     * \return void
+     */
+    void setShowLevel(bool showLevel);
 
-	/**
-	 * Set whether to show the log level.
-	 * 
-	 * \param showLevel - true if the log level should be shown for each log
-	 *                    false otherwise.
-	 * \return void
-	 */
-	void setShowLevel(bool showLevel);
+    /**
+     * Get whether the log level is shown during logging
+     * 
+     * \return true if the log level is be shown for each log
+     *         false otherwise.
+     */
+    bool getShowLevel() const;
 
-	/**
-	 * Get whether the log level is shown during logging
-	 * 
-	 * \return true if the log level is be shown for each log
-	 *         false otherwise.
-	 */
-	bool getShowLevel() const;
+    /**
+     * Set whether to show the log colors.
+     *
+     * \param showColors - true if the log colors should be shown for each log
+     *                    false otherwise.
+     * \return void
+     */
+    void setShowColors(bool showColors);
 
-	/**
-	 * Set whether to show the log colors.
-	 *
-	 * \param showColors - true if the log colors should be shown for each log
-	 *                    false otherwise.
-	 * \return void
-	 */
-	void setShowColors(bool showColors);
+    /**
+     * Get whether the log colors are shown during logging
+     *
+     * \return true if the log colors are shown for each log
+     *         false otherwise.
+     */
+    bool getShowColors() const;
 
-	/**
-	 * Get whether the log colors are shown during logging
-	 *
-	 * \return true if the log colors are shown for each log
-	 *         false otherwise.
-	 */
-	bool getShowColors() const;
+    /**
+     * Sets a function to be called before each log command.
+     * 
+     * \param f - The function to be called
+     * \return void
+     */
+    void setPrefix(printfunction f);
 
-	/**
-	 * Sets a function to be called before each log command.
-	 * 
-	 * \param f - The function to be called
-	 * \return void
-	 */
-	void setPrefix(printfunction f);
-
-	/**
+    /**
      * clears prefix.
      *
      * \return void
      */
-	void clearPrefix();
+    void clearPrefix();
 
-	/**
-	 * Sets a function to be called after each log command.
-	 * 
-	 * \param f - The function to be called
-	 * \return void
-	 */
-	void setSuffix(printfunction f);
+    /**
+     * Sets a function to be called after each log command.
+     * 
+     * \param f - The function to be called
+     * \return void
+     */
+    void setSuffix(printfunction f);
 
-	/**
+    /**
      * clears suffix.
      *
      * \return void
      */
-	void clearSuffix();
+    void clearSuffix();
 
-	/**
-	 * Output a fatal error message. Output message contains
-	 * F: followed by original message
-	 * Fatal error messages are printed out at
-	 * loglevels >= LOG_LEVEL_FATAL
-	 * 
-	 * \param msg format string to output
-	 * \param ... any number of variables
-	 * \return void
-	 */
-	template <class T, typename... Args> void fatal(T msg, Args... args) {
-#ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_FATAL, false, msg, args...);
-#endif
-	}
+    /**
+     * Adds a new handler which outputs the stream to another source.
+     * For example, you can output to Serial and into a file at the same time.
+     */
+    void addHandler(Print* handler);
 
-	template <class T, typename... Args> void fatalln(T msg, Args... args) {
-#ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_FATAL, true, msg, args...);
-#endif
-	}
+    /**
+     * Removes stream handler and stops outputting the data.
+     */
+    void removeHandler(Print* handler);
 
-	/**
-	 * Output an error message. Output message contains
-	 * E: followed by original message
-	 * Error messages are printed out at
-	 * loglevels >= LOG_LEVEL_ERROR
-	 * 
-	 * \param msg format string to output
-	 * \param ... any number of variables
-	 * \return void
-	 */
-	template <class T, typename... Args> void error(T msg, Args... args) {
+    /**
+     * Output a fatal error message. Output message contains
+     * F: followed by original message
+     * Fatal error messages are printed out at
+     * loglevels >= LOG_LEVEL_FATAL
+     * 
+     * \param msg format string to output
+     * \param ... any number of variables
+     * \return void
+     */
+    template <class T, typename... Args> void fatal(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_ERROR, false, msg, args...);
+        printLevel(LOG_LEVEL_FATAL, false, msg, args...);
 #endif
-	}
+    }
+
+    template <class T, typename... Args> void fatalln(T msg, Args... args) {
+#ifndef DISABLE_LOGGING
+        printLevel(LOG_LEVEL_FATAL, true, msg, args...);
+#endif
+    }
+
+    /**
+     * Output an error message. Output message contains
+     * E: followed by original message
+     * Error messages are printed out at
+     * loglevels >= LOG_LEVEL_ERROR
+     * 
+     * \param msg format string to output
+     * \param ... any number of variables
+     * \return void
+     */
+    template <class T, typename... Args> void error(T msg, Args... args) {
+#ifndef DISABLE_LOGGING
+        printLevel(LOG_LEVEL_ERROR, false, msg, args...);
+#endif
+    }
   
-	template <class T, typename... Args> void errorln(T msg, Args... args) {
+    template <class T, typename... Args> void errorln(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_ERROR, true, msg, args...);
+        printLevel(LOG_LEVEL_ERROR, true, msg, args...);
 #endif
-	}
+    }
 
-	/**
-	 * Output a warning message. Output message contains
-	 * W: followed by original message
-	 * Warning messages are printed out at
-	 * loglevels >= LOG_LEVEL_WARNING
-	 * 
-	 * \param msg format string to output
-	 * \param ... any number of variables
-	 * \return void
-	 */
-	template <class T, typename... Args> void warning(T msg, Args...args) {
+    /**
+     * Output a warning message. Output message contains
+     * W: followed by original message
+     * Warning messages are printed out at
+     * loglevels >= LOG_LEVEL_WARNING
+     * 
+     * \param msg format string to output
+     * \param ... any number of variables
+     * \return void
+     */
+    template <class T, typename... Args> void warning(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
-	printLevel(LOG_LEVEL_WARNING, false, msg, args...);
+        printLevel(LOG_LEVEL_WARNING, false, msg, args...);
 #endif
-	}
+    }
   
-	template <class T, typename... Args> void warningln(T msg, Args...args) {
+    template <class T, typename... Args> void warningln(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_WARNING, true, msg, args...);
+        printLevel(LOG_LEVEL_WARNING, true, msg, args...);
 #endif
-	}
+    }
 
-	/**
-	 * Output a notice message. Output message contains
-	 * I: followed by original message
-	 * Notice messages are printed out at
-	 * loglevels >= LOG_LEVEL_NOTICE
-	 * 
-	 * \param msg format string to output
-	 * \param ... any number of variables
-	 * \return void
-	 */
-	template <class T, typename... Args> void notice(T msg, Args...args) {
+    /**
+     * Output a notice message. Output message contains
+     * I: followed by original message
+     * Notice messages are printed out at
+     * loglevels >= LOG_LEVEL_NOTICE
+     * 
+     * \param msg format string to output
+     * \param ... any number of variables
+     * \return void
+     */
+    template <class T, typename... Args> void notice(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_NOTICE, false, msg, args...);
+        printLevel(LOG_LEVEL_NOTICE, false, msg, args...);
 #endif
-	}
+    }
   
-	template <class T, typename... Args> void noticeln(T msg, Args...args) {
+    template <class T, typename... Args> void noticeln(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_NOTICE, true, msg, args...);
+        printLevel(LOG_LEVEL_NOTICE, true, msg, args...);
 #endif
-	}
+    }
 
-	template <class T, typename... Args> void info(T msg, Args...args) {
+    template <class T, typename... Args> void info(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_INFO, false, msg, args...);
+        printLevel(LOG_LEVEL_INFO, false, msg, args...);
 #endif
-	}
+    }
 
-	template <class T, typename... Args> void infoln(T msg, Args...args) {
+    template <class T, typename... Args> void infoln(T msg, Args...args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_INFO, true, msg, args...);
+        printLevel(LOG_LEVEL_INFO, true, msg, args...);
 #endif
-	}
+    }
 
-	/**
-	 * Output a trace message. Output message contains
-	 * N: followed by original message
-	 * Trace messages are printed out at
-	 * loglevels >= LOG_LEVEL_TRACE
-	 * 
-	 * \param msg format string to output
-	 * \param ... any number of variables
-	 * \return void
-	*/
-	template <class T, typename... Args> void trace(T msg, Args... args) {
+    /**
+     * Output a trace message. Output message contains
+     * N: followed by original message
+     * Trace messages are printed out at
+     * loglevels >= LOG_LEVEL_TRACE
+     * 
+     * \param msg format string to output
+     * \param ... any number of variables
+     * \return void
+    */
+    template <class T, typename... Args> void trace(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_TRACE, false, msg, args...);
+        printLevel(LOG_LEVEL_TRACE, false, msg, args...);
 #endif
-	}
+    }
 
-	template <class T, typename... Args> void traceln(T msg, Args... args) {
+    template <class T, typename... Args> void traceln(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_TRACE, true, msg, args...);
+        printLevel(LOG_LEVEL_TRACE, true, msg, args...);
 #endif
-	}
+    }
 
-	/**
-	 * Output a verbose message. Output message contains
-	 * V: followed by original message
-	 * Debug messages are printed out at
-	 * loglevels >= LOG_LEVEL_VERBOSE
-	 * 
-	 * \param msg format string to output
-	 * \param ... any number of variables
-	 * \return void
-	 */
-	template <class T, typename... Args> void verbose(T msg, Args... args) {
+    /**
+     * Output a verbose message. Output message contains
+     * V: followed by original message
+     * Debug messages are printed out at
+     * loglevels >= LOG_LEVEL_VERBOSE
+     * 
+     * \param msg format string to output
+     * \param ... any number of variables
+     * \return void
+     */
+    template <class T, typename... Args> void verbose(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_VERBOSE, false, msg, args...);
+        printLevel(LOG_LEVEL_VERBOSE, false, msg, args...);
 #endif
-	}
+    }
 
-	template <class T, typename... Args> void verboseln(T msg, Args... args) {
+    template <class T, typename... Args> void verboseln(T msg, Args... args) {
 #ifndef DISABLE_LOGGING
-		printLevel(LOG_LEVEL_VERBOSE, true, msg, args...);
+        printLevel(LOG_LEVEL_VERBOSE, true, msg, args...);
 #endif
-	}
+    }
 
 private:
-	void print(const char *format, va_list args);
+    void print(const char *format, va_list args);
 
-	void print(const __FlashStringHelper *format, va_list args);
+    void print(const __FlashStringHelper *format, va_list args);
 
-	void print(const Printable& obj, va_list args) {
+    void print(const Printable& obj, va_list args) {
 #ifndef DISABLE_LOGGING
-		_logOutput->print(obj);
+        for (int i = 0; i < _handlerCount; i++) {
+            if (_logOutputs[i]) {
+                _logOutputs[i]->print(obj);
+            }
+        }
 #endif
-	}
+    }
 
-	void printFormat(const char format, va_list *args);
+    void printFormat(const char format, va_list *args);
 
-	template <class T> void printLevel(int level, bool cr, T msg, ...) {
+    template <class T> void printLevel(int level, bool cr, T msg, ...) {
 #ifndef DISABLE_LOGGING
-		if (level > _level) {
-			return;
-		}
-		if (level < LOG_LEVEL_SILENT) {
-			level = LOG_LEVEL_SILENT;
-		}
+        if (level > _level) {
+            return;
+        }
+        if (level < LOG_LEVEL_SILENT) {
+            level = LOG_LEVEL_SILENT;
+        }
 
 #ifdef ESP32
-		if (xSemaphoreTake(_semaphore, (TickType_t) 10 )) {
+        if (xSemaphoreTake(_semaphore, (TickType_t) 10 )) {
 #endif
-			if (_showColors) {
-				switch (level) {
-				case LOG_LEVEL_FATAL:
-					_logOutput->print(LOG_COLOR_BOLD_RED);
-					break;
-				case LOG_LEVEL_ERROR:
-					_logOutput->print(LOG_COLOR_RED);
-					break;
-				case LOG_LEVEL_WARNING:
-					_logOutput->print(LOG_COLOR_YELLOW);
-					break;
-				default:
-					break;
-				}
-			}
+            if (_showColors) {
+                switch (level) {
+                case LOG_LEVEL_FATAL:
+                    writeLog(LOG_COLOR_BOLD_RED);
+                    break;
+                case LOG_LEVEL_ERROR:
+                    writeLog(LOG_COLOR_RED);
+                    break;
+                case LOG_LEVEL_WARNING:
+                    writeLog(LOG_COLOR_YELLOW);
+                    break;
+                default:
+                    break;
+                }
+            }
 
-			if (_prefix != NULL) {
-				_prefix(_logOutput, level);
-			}
+            if (_prefix != NULL) {
+                for (int i = 0; i < _handlerCount; i++) {
+                    if (_logOutputs[i]) {
+                        _prefix(_logOutputs[i], level);
+                    }
+                }
+            }
 
-			if (_showLevel) {
-				static const char levels[] = "FEWITV";
-				_logOutput->print(levels[level - 1]);
-				_logOutput->print(": ");
-			}
+            if (_showLevel) {
+                static const char levels[] = "FEWITV";
+                writeLog(levels[level - 1]);
+                writeLog(": ");
+            }
 
-			va_list args;
-			va_start(args, msg);
-			print(msg, args);
+            va_list args;
+            va_start(args, msg);
+            print(msg, args);
 
-			if(_suffix != NULL)	{
-				_suffix(_logOutput, level);
-			}
+            if (_suffix != NULL) {
+                for (int i = 0; i < _handlerCount; i++) {
+                    if (_logOutputs[i]) {
+                        _suffix(_logOutputs[i], level);
+                    }
+                }
+            }
 
-			if (cr)	{
-			    _logOutput->print(CR);
-			}
+            if (cr)	{
+                writeLog(CR);
+            }
 
-			if (_showColors) {
-				_logOutput->print(LOG_COLOR_END);
-			}
+            if (_showColors) {
+                writeLog(LOG_COLOR_END);
+            }
 
-			va_end(args);
+            va_end(args);
 #ifdef ESP32
-			xSemaphoreGive(_semaphore);
-		}
+            xSemaphoreGive(_semaphore);
+        }
 #endif
 #endif
-	}
+    }
 
 #ifndef DISABLE_LOGGING
-	int _level;
-	bool _showLevel;
-	bool _showColors;
-	Print* _logOutput;
+    int _level;
+    bool _showLevel;
+    bool _showColors;
+    Print* _logOutputs[LOG_MAX_HANDLERS];
+    int _handlerCount;
+
+    template<typename... Args> void writeLog(Args... args);
 #ifdef ESP32
-	SemaphoreHandle_t _semaphore;
+    SemaphoreHandle_t _semaphore;
 #endif
 
-	printfunction _prefix = NULL;
-	printfunction _suffix = NULL;
+    printfunction _prefix = NULL;
+    printfunction _suffix = NULL;
 #endif
 };
 
