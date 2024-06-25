@@ -1,8 +1,12 @@
 ![ArduinoLog logo](/Images/logo.png?raw=true )
-ArduinoLog - C++ Log library for Arduino devices
-====================
-[![Build Status](https://travis-ci.org/thijse/Arduino-Log.svg?branch=master)](https://travis-ci.org/thijse/Arduino-Log)
-[![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](http://doge.mit-license.org)
+# ArduinoLog - C++ Log library for Arduino devices
+[![Arduino_CI](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/arduino_ci.yml/badge.svg)](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/arduino_ci.yml)
+[![Tests](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/platformio.yml/badge.svg)](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/platformio.yml)
+[![Documentation](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/doxygen.yml/badge.svg)](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/doxygen.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/JSC-electronics/Arduino-Log/blob/main/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/JSC-electronics/Arduino-Log.svg?maxAge=3600)](https://github.com/JSC-electronics/Arduino-Log/releases)
+[![JSC electronics](https://img.shields.io/badge/JSC-electronics-green.svg)](https://www.jsce.cz/)
+[![Donate](https://img.shields.io/badge/donate-PayPal-blueviolet.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SESX9ABM7V8KA&source=url)
 
 *An minimalistic Logging framework for Arduino-compatible embedded systems.*
 
@@ -28,9 +32,9 @@ ArduinoLog is a minimalistic framework to help the programmer output log stateme
 This package has been published to the Arduino & PlatformIO package managers, but you can also download it from GitHub. 
 
 - By directly loading fetching the Archive from GitHub: 
- 1. Go to [https://github.com/thijse/Arduino-Log](https://github.com/thijse/Arduino-Log)
+ 1. Go to [https://github.com/JSC-electronics/Arduino-Log](https://github.com/JSC-electronics/Arduino-Log)
  2. Click the DOWNLOAD ZIP button in the panel on the
- 3. Rename the uncompressed folder **Arduino-Log-master** to **Arduino-Log**.
+ 3. Rename the uncompressed folder **Arduino-Log-main** to **Arduino-Log**.
  4. You may need to create the libraries subfolder if its your first library.  
  5. Place the **Arduino-Log** library folder in your **<arduinosketchfolder>/libraries/** folder. 
  5. Restart the IDE.
@@ -118,7 +122,7 @@ where the format string can be used to format the log variables
 * %p    display a  printable object 
 ```
 
- Newlines can be added using the `CR` keyword or by using the `...ln` version of each of the log functions.  The difference when using the `...ln` is that the newline is placed after suffix, and only a single newline can be added. Some terminals prefer `NL` (New line).
+Newlines can be added using the `CR` keyword or by using the `...ln` version of each of the log functions.  The difference when using the `...ln` is that the newline is placed after suffix, and only a single newline can be added. Some terminals prefer `NL` (New line).
 
 ### Examples
 
@@ -156,7 +160,7 @@ Log.verboseln ("ip address   : %p", ipAddress);
 
 [this example](https://forum.arduino.cc/t/printable-classes/438816) shows how to make your own classes printable
  
- ### Storing messages in Flash memory
+### Storing messages in Flash memory
 
 Flash strings log variables can be stored and reused at several places to reduce final hex size.
 
@@ -193,7 +197,8 @@ will result in log timestamps very similar to e.g. NLOG:
 ## Credit
 
 Based on library by 
-* [Bernd Klein](https://github.com/mrRobot62)  
+* [Bernd Klein](https://github.com/mrRobot62)
+* [Thijs Elenbaas](https://github.com/thijse)
 
 Bugfixes & features by
 * [rahuldeo2047](https://github.com/rahuldeo2047)
@@ -211,9 +216,9 @@ Bugfixes & features by
 
 ## On using and modifying libraries
 
-- [http://www.arduino.cc/en/Main/Libraries](http://www.arduino.cc/en/Main/Libraries)
-- [http://www.arduino.cc/en/Reference/Libraries](http://www.arduino.cc/en/Reference/Libraries) 
+- [https://www.arduino.cc/en/Main/Libraries](http://www.arduino.cc/en/Main/Libraries)
+- [https://www.arduino.cc/en/Reference/Libraries](http://www.arduino.cc/en/Reference/Libraries) 
 
 ## Copyright
 
-ArduinoLog (Copyright © 2017,2018, 2019, 2021) is provided under MIT License.
+ArduinoLog (Copyright © 2017, 2018, 2019, 2021, 2024) is provided under MIT License.

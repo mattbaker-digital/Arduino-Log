@@ -4,20 +4,23 @@
   / _ \|   / |) | |_| || || .` | (_) | |_| (_) | (_ |
  /_/ \_\_|_\___/ \___/|___|_|\_|\___/|____\___/ \___|
 
-  Log library for Arduino
-  version 1.1.1
-  https://github.com/thijse/Arduino-Log
+ Log library for Arduino
 
-Licensed under the MIT License <http://opensource.org/licenses/MIT>.
-
+ Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 */
+
 #ifndef _ARDUINO_LOG_H_
 #define _ARDUINO_LOG_H_
 #include <inttypes.h>
 #include <stdarg.h>
-#include <mutex>
 
-// Non standard: Arduino.h also chosen if ARDUINO is not defined. To facilitate use in non-Arduino test environments
+// Mutex is supported only on ESP32 boards.
+#ifdef ESP32
+#include <mutex>
+#endif
+
+// Non standard: Arduino.h also chosen if ARDUINO is not defined.
+// To facilitate use in non-Arduino test environments
 #if ARDUINO < 100
 #include "WProgram.h"
 #else
@@ -48,8 +51,8 @@ typedef void (*printfunction)(Print*, int);
 #define LOG_LEVEL_TRACE   5
 #define LOG_LEVEL_VERBOSE 6
 
-#define LOG_COLOR_BOLDRED F("\033[1;31m")
-#define LOG_COLOR_BOLDWHITE F("\033[1;37m")
+#define LOG_COLOR_BOLD_RED F("\033[1;31m")
+#define LOG_COLOR_BOLD_WHITE F("\033[1;37m")
 #define LOG_COLOR_RED "\033[;31m"
 #define LOG_COLOR_YELLOW "\033[;33m"
 #define LOG_COLOR_GREEN "\033[;32m"
@@ -275,7 +278,7 @@ public:
 
 	/**
 	 * Output a notice message. Output message contains
-	 * N: followed by original message
+	 * I: followed by original message
 	 * Notice messages are printed out at
 	 * loglevels >= LOG_LEVEL_NOTICE
 	 * 
@@ -373,11 +376,13 @@ private:
 			level = LOG_LEVEL_SILENT;
 		}
 
+#ifdef ESP32
 		if (xSemaphoreTake(_semaphore, (TickType_t) 10 )) {
+#endif
 			if (_showColors) {
 				switch (level) {
 				case LOG_LEVEL_FATAL:
-					_logOutput->print(LOG_COLOR_BOLDRED);
+					_logOutput->print(LOG_COLOR_BOLD_RED);
 					break;
 				case LOG_LEVEL_ERROR:
 					_logOutput->print(LOG_COLOR_RED);
@@ -417,8 +422,10 @@ private:
 			}
 
 			va_end(args);
+#ifdef ESP32
 			xSemaphoreGive(_semaphore);
 		}
+#endif
 #endif
 	}
 
@@ -427,12 +434,16 @@ private:
 	bool _showLevel;
 	bool _showColors;
 	Print* _logOutput;
+#ifdef ESP32
 	SemaphoreHandle_t _semaphore;
+#endif
 
 	printfunction _prefix = NULL;
 	printfunction _suffix = NULL;
 #endif
 };
 
+#ifndef __DO_NOT_INSTANTIATE__
 extern Logging Log;
+#endif
 #endif
