@@ -402,7 +402,7 @@ private:
                 }
             }
 
-            if (_prefix != NULL) {
+            if (_prefix != NULL && _showLevel) {
                 for (int i = 0; i < _handlerCount; i++) {
                     if (_logOutputs[i]) {
                         _prefix(_logOutputs[i], level);
@@ -420,7 +420,7 @@ private:
             va_start(args, msg);
             print(msg, args);
 
-            if (_suffix != NULL) {
+            if (_suffix != NULL && _showLevel) {
                 for (int i = 0; i < _handlerCount; i++) {
                     if (_logOutputs[i]) {
                         _suffix(_logOutputs[i], level);
