@@ -11,16 +11,17 @@
 			"maintainer": false
 		},
 		{
-			"name": "Vladimír Záhradník",
-			"url": "https://github.com/vzahradnik",
+			"name": "JSC TechMinds",
+			"email": "development@jsctm.cz",
+			"url": "https://github.com/JSC-TechMinds",
 			"maintainer": true
 		}
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/JSC-electronics/Arduino-Log"
+		"url": "https://github.com/JSC-TechMinds/Arduino-Log"
 	},
-	"homepage": "https://github.com/JSC-electronics/Arduino-Log",
+	"homepage": "https://github.com/JSC-TechMinds/Arduino-Log",
 	"frameworks": ["arduino"],
 	"platforms": "*",
 	"examples": "examples/*/*.ino"

@@ -1,11 +1,11 @@
 ![ArduinoLog logo](/Images/logo.png?raw=true )
 # ArduinoLog - C++ Log library for Arduino devices
-[![Arduino_CI](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/arduino_ci.yml/badge.svg)](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/arduino_ci.yml)
-[![Tests](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/platformio.yml/badge.svg)](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/platformio.yml)
-[![Documentation](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/doxygen.yml/badge.svg)](https://github.com/JSC-electronics/Arduino-Log/actions/workflows/doxygen.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/JSC-electronics/Arduino-Log/blob/main/LICENSE)
-[![GitHub release](https://img.shields.io/github/release/JSC-electronics/Arduino-Log.svg?maxAge=3600)](https://github.com/JSC-electronics/Arduino-Log/releases)
-[![JSC electronics](https://img.shields.io/badge/JSC-electronics-green.svg)](https://www.jsce.cz/)
+[![Arduino_CI](https://github.com/JSC-TechMinds/Arduino-Log/actions/workflows/arduino_ci.yml/badge.svg)](https://github.com/JSC-TechMinds/Arduino-Log/actions/workflows/arduino_ci.yml)
+[![Tests](https://github.com/JSC-TechMinds/Arduino-Log/actions/workflows/platformio.yml/badge.svg)](https://github.com/JSC-TechMinds/Arduino-Log/actions/workflows/platformio.yml)
+[![Documentation](https://github.com/JSC-TechMinds/Arduino-Log/actions/workflows/doxygen.yml/badge.svg)](https://github.com/JSC-TechMinds/Arduino-Log/actions/workflows/doxygen.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/JSC-TechMinds/Arduino-Log/blob/main/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/JSC-TechMinds/Arduino-Log.svg?maxAge=3600)](https://github.com/JSC-TechMinds/Arduino-Log/releases)
+[![JSC TechMinds](https://img.shields.io/badge/JSC-TechMinds-green.svg)](https://www.jsctm.cz)
 [![Donate](https://img.shields.io/badge/donate-PayPal-blueviolet.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SESX9ABM7V8KA&source=url)
 
 *An minimalistic Logging framework for Arduino-compatible embedded systems.*
@@ -36,7 +36,7 @@ ArduinoLog is a minimalistic framework to help the programmer output log stateme
 This package has been published to the Arduino & PlatformIO package managers, but you can also download it from GitHub. 
 
 - By directly loading fetching the Archive from GitHub: 
- 1. Go to [https://github.com/JSC-electronics/Arduino-Log](https://github.com/JSC-electronics/Arduino-Log)
+ 1. Go to [https://github.com/JSC-TechMinds/Arduino-Log](https://github.com/JSC-TechMinds/Arduino-Log)
  2. Click the DOWNLOAD ZIP button in the panel on the
  3. Rename the uncompressed folder **Arduino-Log-main** to **Arduino-Log**.
  4. You may need to create the libraries subfolder if its your first library.  
