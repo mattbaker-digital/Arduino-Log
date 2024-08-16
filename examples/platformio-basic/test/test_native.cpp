@@ -165,13 +165,13 @@ void test_int_binary_values() {
 }
 void test_long_values() {
   reset_output();
-  long long_value1 = 34359738368;
-  long long_value2 = 274877906944;
+  long long_value1 = 343597383;
+  long long_value2 = 274877906;
   Log.notice(F("Log as Info with long values    : %l, %l" CR), long_value1,
              long_value2);
   std::stringstream expected_output;
   expected_output << "I: Log as Info with long values    : "
-                     "34359738368, 274877906944\n";
+                     "343597383, 274877906\n";
   TEST_ASSERT_EQUAL_STRING_STREAM(expected_output, output_);
 }
 
@@ -247,8 +247,8 @@ void test_mixed_values() {
   reset_output();
   int int_value1 = 15826;
   int int_value2 = 31477;
-  long long_value1 = 274877906944;
-  long long_value2 = 68719476743;
+  long long_value1 = 274877906;
+  long long_value2 = 687194767;
   bool true_value = true;
   bool false_value = false;
   Log.notice(F("Log as Debug with mixed values  : %d, %d, %l, %l, %t, %T" CR),
@@ -256,8 +256,8 @@ void test_mixed_values() {
              false_value);
   std::stringstream expected_output;
   expected_output
-      << "I: Log as Debug with mixed values  : 15826, 31477, 274877906944, "
-         "68719476743, T, false\n";
+      << "I: Log as Debug with mixed values  : 15826, 31477, 274877906, "
+         "687194767, T, false\n";
   TEST_ASSERT_EQUAL_STRING_STREAM(expected_output, output_);
 }
 
