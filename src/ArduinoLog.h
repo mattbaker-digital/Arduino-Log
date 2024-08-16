@@ -123,6 +123,8 @@ typedef void (*printfunction)(Print*, int);
 
 class Logging {
 public:
+    static constexpr char lineEnd[] = "\n";
+
     explicit Logging();
 
     /**
@@ -390,7 +392,7 @@ private:
 
     void printFormat(const char format, va_list *args);
 
-    template <class T> void printLevel(int level, bool cr, T msg, ...) {
+    template <class T> void printLevel(int level, bool newLine, T msg, ...) {
 #ifndef DISABLE_LOGGING
         if (level > _level) {
             return;
@@ -444,8 +446,8 @@ private:
                 }
             }
 
-            if (cr)	{
-                writeLog(CR);
+            if (newLine)	{
+                writeLog(lineEnd);
             }
 
             if (_showColors) {
