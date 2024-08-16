@@ -124,6 +124,9 @@ void setUp(void) {
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
   set_up_logging_captures();
 }
+
+void tearDown(void) {};
+
 void test_int_values() {
   reset_output();
   int int_value1 = 173;
