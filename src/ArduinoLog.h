@@ -66,7 +66,6 @@ typedef void (*printfunction)(Print*, int);
 #define CR "\n"
 #define LF "\r"
 #define NL "\n\r"
-#define LOGGING_VERSION 1_0_4
 
 /**
  * ArduinoLog is a minimalistic framework to help the programmer output log statements to an output of choice, 

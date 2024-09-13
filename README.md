@@ -225,10 +225,10 @@ e.g. into a log file. By default, up to 5 handlers is supported. You can overrid
     // Get another Printable object, for example a file from SD card.
     File sdcardLog = ... // Properly initialize the object.
 
-    Log.addHandler(sdcardLog);
+    Log.addHandler(&sdcardLog);
 
     // Once the extra stream is not needed, you can simply remove the handler:
-    Log.removeHandler(sdcardLog);
+    Log.removeHandler(&sdcardLog);
 ```
 
 
